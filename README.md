@@ -2,29 +2,29 @@
 
 ## Context
 
-For anyone landing on this repository, I'm Guillermo, Data Scientist, and I've spent most of my career building **Recommender Systems** and **Rankings**. 
+I am Guillermo, a **Data Scientist** who has spent most of his career building **Recommender Systems** and **Rankings**. Lately, however, I've been more interested in what people call **Physical AI**.
 
-Lately, however, I've been more interested in what people call **physical AI**. My belief is that as AI gets more capable, the next frontier is to make it act in the real world, I mean **physically**. There is this viral quote that I think captures the idea:
+I agree with the view that as AI gets more capable, the next breakthrough is to make it act in the real world, physically. This is a viral quote that perfectly resonates with my thinking:
 
 <p align="center"><i>"I want AI to do my laundry and dishes so that I can do art and writing,<br>not for AI to do my art and writing so that I can do my laundry and dishes."</i><br>(<a href="https://x.com/AuthorJMac/status/1773679197631701238">Joanna Maciejewska</a>)</p>
 
-The problem is that I have no experience in those fields (for example, I have never used Reinforcement Learning), and I have no idea how to get started.
+![LG's CLOiD robot folding clothes](assets/images/robot-folding-laundry.jpg)
 
-To kick things off, I have read a bunch of blogposts, YouTube videos, and papers (check the [References](#references) section), and one that caught my attention was [Mastering Diverse Domains through World Models](https://arxiv.org/abs/2301.04104). This paper describes `DreamerV3`, a World Model agent that learns to act in a variety of environments by first learning a model of how the world behaves. This paper, later led me to a second one, [R2-Dreamer: Redundancy-Reduced World Models without Decoders or Augmentation](https://openreview.net/forum?id=Je2QqXrcQq), which introduces a related method that changes how the World Model learns its visual representation.
+_LG's CLOiD robot, folding clothes. Source: CNET.com, as credited in [my Substack post](https://guillelahuerta.substack.com/p/how-dreamerv3-dreams)._
+
+## Why DreamerV3
+
+The problem was that I didn't know where to start. I have no experience in Robotics or Reinforcement Learning, so I was a bit lost. After doing some research, I found that one of the bottlenecks in Physical AI is **data collection**, and one of the ways to overcome this limitation is to use **World Models**, which basically allow you to predict how the environment changes given an agent's action.
+
+That led me to the DreamerV3 paper, [Mastering Diverse Domains through World Models](https://arxiv.org/abs/2301.04104), by researchers at DeepMind and the University of Toronto. It introduces an RL agent that uses a World Model to train on imagined sequences, and that outperformed specialised methods across more than 150 tasks with a fixed set of hyperparameters. Given how widely cited the paper was, and also out of the respect I have for DeepMind's work, it seemed like a great place to start.
+
+However, understanding it proved harder than expected, probably because I was lacking some basic concepts about RL and World Models. This repository is my attempt to share **simplified explanations** that may be useful for anyone willing to learn more about Physical AI, without having any prior RL/Robotics experience. Writing them also helps me internalise the concepts and learn in the process.
+
+DreamerV3 later led me to a second paper, [R2-Dreamer: Redundancy-Reduced World Models without Decoders or Augmentation](https://openreview.net/forum?id=Je2QqXrcQq), which changes how the World Model learns its visual representation. For my study, I will use its authors' [NM512/r2dreamer](https://github.com/NM512/r2dreamer) codebase. It already includes both an R2-Dreamer configuration and a DreamerV3 baseline, and it is written in PyTorch, which I am more familiar with than JAX. That baseline is their reproduction of DreamerV3, rather than the original JAX implementation.
 
 ## Objective
 
 This repository will be a summary of my personal study to understand the DreamerV3 and R2-Dreamer papers. I plan to compare the `DreamerV3` baseline implemented in [NM512/r2dreamer](https://github.com/NM512/r2dreamer) with `R2-Dreamer` on a simple visual task. I will document my progress here, and I hope **this could be useful for anyone else trying to get started in this field**. If it is, please feel free to reach out to me, for example, via [Linkedin](https://www.linkedin.com/in/guillermo-lahuerta/).
-
-## Why DreamerV3
-
-I have been reading a lot about Physical AI, and the main idea that caught my attention was the following: what if instead of learning to act directly from real experience, we could build a system where **the agent first learns a model of how its world behaves**, and then uses that model to **train itself on its imagination**. That is essentially what a "**World Model**" allows you to do.
-
-From what I have read online, `DreamerV3` is a great place to start. It compresses what it sees into a **compact latent state**, learns to predict how that state evolves when it acts, and trains its policy inside those predictions, on imagined futures! The agent basically learns from its own "dreams".
-
-One of the main achievements of this model is that it was the first agent that collected diamonds in Minecraft without any human data (I have never played Minecraft, but I found it funny that the top minds in AI use it as a benchmark).
-
-For my study, however, I will use [NM512/r2dreamer](https://github.com/NM512/r2dreamer), the codebase released with the separate R2-Dreamer paper. This was convenient because it already implements the DreamerV3 baseline, and it is written in PyTorch, which I am more familiar with than JAX.
 
 ## How to follow along
 
@@ -43,11 +43,19 @@ I have started by creating this repo and writing this initial README to summariz
 ### July 25th, 2026
 
 The last couple of weeks, I have focused on learning the basics of the two papers. Find my summaries in the following links:
+
 - [docs/how-dreamerv3-works.md](docs/how-dreamerv3-works.md)
 - [docs/how-r2-dreamer-works.md](docs/how-r2-dreamer-works.md)
 
-![Conceptual prior and posterior distributions over possible room layouts](assets/images/prior-posterior-example.png)
+### September 18th, 2026
 
+I have published my Substack post: [**How DreamerV3 dreams**](https://guillelahuerta.substack.com/p/how-dreamerv3-dreams). It is a simplified guide to the World Model, using Atari's Breakout to explain the recurrent state, the stochastic representation, and how the model learns to imagine.
+
+The post covers the World Model; the Critic and Actor are still to come on Substack. The [repository guide](docs/how-dreamerv3-works.md) now includes draft sections on both, alongside the technical explanation from the published post.
+
+![Breakout example showing how recurrent and stochastic states combine past context with the current frame](assets/images/5-state-components.svg)
+
+_The two components of the model state. Source: diagram generated with Claude Design for the Substack post._
 
 ---
 
